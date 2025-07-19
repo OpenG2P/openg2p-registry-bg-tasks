@@ -1,13 +1,13 @@
 import base64
-import httpx
 import json
 import logging
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 
+import httpx
 from openg2p_fastapi_common.service import BaseService
 
-from .oauth_token import OAuthTokenService
 from ..config import Settings
+from .oauth_token import OAuthTokenService
 
 _config = Settings.get_config()
 _logger = logging.getLogger(_config.logging_default_logger_name)

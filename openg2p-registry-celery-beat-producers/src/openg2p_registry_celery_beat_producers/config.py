@@ -20,7 +20,9 @@ class Settings(BaseSettings):
     db_dbname: str = "registrydb"
     db_driver: str = "postgresql"
 
-    db_datasource_pbms: str = "postgresql+psycopg://postgres:password@localhost:5432/pbmsdb"
+    db_datasource_pbms: str = (
+        "postgresql+psycopg://postgres:password@localhost:5432/pbmsdb"
+    )
 
     celery_broker_url: str = "redis://localhost:6379/0"
     celery_backend_url: str = "redis://localhost:6379/0"

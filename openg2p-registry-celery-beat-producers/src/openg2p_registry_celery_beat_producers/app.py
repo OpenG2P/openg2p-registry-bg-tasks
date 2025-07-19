@@ -42,6 +42,6 @@ celery_app.conf.beat_schedule = {
     "payment_status_beat_producer": {
         "task": "payment_status_beat_producer",
         "schedule": _config.producer_frequency,
-    }
+    },
 }
 celery_app.conf.timezone = "UTC"

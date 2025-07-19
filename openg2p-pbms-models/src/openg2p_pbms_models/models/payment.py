@@ -1,6 +1,6 @@
+from openg2p_fastapi_common.models import BaseORMModel
 from sqlalchemy import DateTime, Integer, String
 from sqlalchemy.orm import mapped_column
-from openg2p_fastapi_common.models import BaseORMModel
 
 
 class G2PPayment(BaseORMModel):

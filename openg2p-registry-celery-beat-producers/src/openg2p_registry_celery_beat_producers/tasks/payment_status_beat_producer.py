@@ -1,9 +1,9 @@
 import logging
 from datetime import datetime, timedelta
 
+from openg2p_pbms_models.models import G2PPaymentBatch
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
-from openg2p_pbms_models.models import G2PPaymentBatch
 
 from ..app import celery_app, get_engine
 from ..config import Settings

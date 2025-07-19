@@ -1,16 +1,13 @@
 import logging
+
 import requests
-
-from sqlalchemy.orm import sessionmaker
+from openg2p_pbms_models.models import G2PPayment, G2PPaymentBatch
 from sqlalchemy import select
-from openg2p_pbms_models.models import (
-    G2PPayment,
-    G2PPaymentBatch
-)
+from sqlalchemy.orm import sessionmaker
 
-from ..helpers import JWTService
 from ..app import celery_app, get_engine
 from ..config import Settings
+from ..helpers import JWTService
 
 _config = Settings.get_config()
 _logger = logging.getLogger(_config.logging_default_logger_name)
@@ -39,7 +36,8 @@ def payment_status_worker(batch_id):
                     # based on the Odoo domain logic:
                     # ("remittance_statement_id", "=", False),
                     # ("reversal_statement_id", "=", False),
-                    (G2PPayment.remittance_statement_id == None) | (G2PPayment.reversal_statement_id == None),
+                    (G2PPayment.remittance_statement_id is None)
+                    | (G2PPayment.reversal_statement_id is None),
                 )
             )
             .scalars()
@@ -83,7 +81,9 @@ def payment_status_worker(batch_id):
             }
             status_endpoint_url = getattr(_config, "status_endpoint_url", None)
             if not status_endpoint_url:
-                _logger.warning("No status_endpoint_url configured, skipping status check.")
+                _logger.warning(
+                    "No status_endpoint_url configured, skipping status check."
+                )
                 return
 
             response = requests.post(
@@ -91,26 +91,33 @@ def payment_status_worker(batch_id):
                 json=status_data,
                 headers=headers,
             )
-            _logger.debug("G2P Connect Disbursement Status response: %s", response.content)
+            _logger.debug(
+                "G2P Connect Disbursement Status response: %s", response.content
+            )
 
             response.raise_for_status()
             response = response.json()
             response_list = response.get("message", [])
 
             for response_item in response_list:
-                _logger.info(f"Disbursement ID inside Loop: {response_item.get('disbursement_id')}")
+                _logger.info(
+                    f"Disbursement ID inside Loop: {response_item.get('disbursement_id')}"
+                )
                 # Find payment by disbursement_id
                 payment_by_ref = (
                     session.execute(
                         select(G2PPayment).filter(
-                            G2PPayment.disbursement_id == response_item.get("disbursement_id")
+                            G2PPayment.disbursement_id
+                            == response_item.get("disbursement_id")
                         )
                     )
                     .scalars()
                     .first()
                 )
                 if not payment_by_ref:
-                    _logger.warning(f"No payment found for disbursement_id: {response_item.get('disbursement_id')}")
+                    _logger.warning(
+                        f"No payment found for disbursement_id: {response_item.get('disbursement_id')}"
+                    )
                     continue
 
                 recon_records = response_item.get("disbursement_recon_records", {})

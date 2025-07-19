@@ -20,7 +20,9 @@ class Settings(BaseSettings):
     db_dbname: str = "socialregistrydb"
     db_driver: str = "postgresql"
 
-    db_datasource_pbms: str = "postgresql+psycopg://postgres:password@localhost:5432/pbmsdb"
+    db_datasource_pbms: str = (
+        "postgresql+psycopg://postgres:password@localhost:5432/pbmsdb"
+    )
 
     celery_broker_url: str = "redis://localhost:6379/0"
     celery_backend_url: str = "redis://localhost:6379/0"
@@ -31,9 +33,7 @@ class Settings(BaseSettings):
     mosip_update_uin_url: str = (
         "https://idgenerator.loadtest.openg2p.org/v1/idgenerator/uin"
     )
-    status_endpoint_url: str = (
-        "status_endpoint_url"
-    )
+    status_endpoint_url: str = "status_endpoint_url"
 
     # Keymanager auth
     sign_key_keymanager_app_id: str = ""
