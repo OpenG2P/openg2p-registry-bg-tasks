@@ -16,7 +16,7 @@ _engine = get_engine()
 @celery_app.task(name="registry_beat_producer")
 def registry_beat_producer():
     _logger.info("Checking for pending tasks")
-    session_maker = sessionmaker(bind=_engine, expire_on_commit=False)
+    session_maker = sessionmaker(bind=_engine.get("registry"), expire_on_commit=False)
 
     with session_maker() as session:
         # Select entries that are PENDING and have not exceeded max attempts

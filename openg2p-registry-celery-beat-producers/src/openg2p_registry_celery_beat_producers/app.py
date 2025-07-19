@@ -20,7 +20,11 @@ class Initializer(BaseInitializer):
 def get_engine():
     if _config.db_datasource:
         db_engine = create_engine(_config.db_datasource)
-        return db_engine
+        db_engine_pbms = create_engine(_config.db_datasource_pbms)
+        return {
+            "registry": db_engine,
+            "pbms": db_engine_pbms,
+        }
 
 
 celery_app = Celery(
@@ -35,5 +39,9 @@ celery_app.conf.beat_schedule = {
         "task": "registry_beat_producer",
         "schedule": _config.producer_frequency,
     },
+    "payment_status_beat_producer": {
+        "task": "payment_status_beat_producer",
+        "schedule": _config.producer_frequency,
+    }
 }
 celery_app.conf.timezone = "UTC"
