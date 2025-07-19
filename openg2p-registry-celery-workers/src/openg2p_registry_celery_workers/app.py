@@ -24,7 +24,11 @@ class Initializer(BaseInitializer):
 def get_engine():
     if _config.db_datasource:
         db_engine = create_engine(_config.db_datasource)
-        return db_engine
+        db_engine_pbms = create_engine(_config.db_datasource_pbms)
+        return {
+            "registry": db_engine,
+            "pbms": db_engine_pbms,
+        }
 
 
 celery_app = Celery(

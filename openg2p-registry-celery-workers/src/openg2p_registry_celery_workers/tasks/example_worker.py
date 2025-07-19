@@ -15,7 +15,7 @@ _engine = get_engine()
 @celery_app.task(name="example_worker")
 def example_worker(id: int):
     _logger.info(f"Worker processing id: {id}")
-    session_maker = sessionmaker(bind=_engine, expire_on_commit=False)
+    session_maker = sessionmaker(bind=_engine.get("registry"), expire_on_commit=False)
     with session_maker() as session:
         task_record = None
         try:
