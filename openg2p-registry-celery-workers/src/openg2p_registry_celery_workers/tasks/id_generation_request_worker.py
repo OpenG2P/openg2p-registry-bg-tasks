@@ -22,7 +22,7 @@ _engine = get_engine()
 @celery_app.task(name="id_generation_request_worker")
 def id_generation_request_worker(id: int):
     _logger.info("Starting ID generation request")
-    session_maker = sessionmaker(bind=_engine, expire_on_commit=False)
+    session_maker = sessionmaker(bind=_engine.get("registry"), expire_on_commit=False)
 
     with session_maker() as session:
         queue_entry = None
